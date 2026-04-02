@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Hirono | моя коллекция</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #0a1a0e;
+            font-family: 'Inter', sans-serif;
+            color: #e0f0e0;
+            padding: 2rem 1.5rem;
+            line-height: 1.5;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            margin-bottom: 2.5rem;
+            border-bottom: 1px solid rgba(100, 180, 100, 0.3);
+            padding-bottom: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .title-section h1 {
+            font-size: 2.8rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #c8e6b5, #8bc34a, #5d8c3b);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .title-section h1 i {
+            background: none;
+            -webkit-background-clip: unset;
+            background-clip: unset;
+            color: #b8e47c;
+        }
+        .sub {
+            color: #b8d9a6;
+            margin-top: 8px;
+            font-size: 1rem;
+            font-weight: 500;
+            letter-spacing: 0.3px;
+        }
+        .admin-panel {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+        .admin-btn {
+            background: #1f3a24;
+            border: 1px solid #5a8f4c;
+            padding: 8px 18px;
+            border-radius: 60px;
+            font-weight: 500;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: 0.2s;
+            color: #d4f0c4;
+        }
+        .admin-btn.active {
+            background: #8bc34a;
+            color: #0a1a0e;
+            border-color: #b8e47c;
+        }
+        .stats {
+            background: #142618;
+            padding: 8px 16px;
+            border-radius: 60px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            border: 1px solid #2e5a2a;
+        }
+        .stats i {
+            margin-right: 6px;
+            color: #b8e47c;
+        }
+
+        .collections-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+            gap: 28px;
+            margin-bottom: 48px;
+        }
+
+        .collection-card {
+            background: #0f2416;
+            backdrop-filter: blur(2px);
+            border-radius: 32px;
+            border: 1px solid rgba(100, 180, 100, 0.3);
+            overflow: hidden;
+            transition: all 0.25s ease;
+            box-shadow: 0 15px 30px -12px rgba(0, 0, 0, 0.6);
+        }
+        .collection-card:hover {
+            border-color: #8bc34a;
+            transform: translateY(-4px);
+            box-shadow: 0 20px 35px -12px black;
+        }
+        .card-header {
+            padding: 1.2rem 1.5rem 0.8rem 1.5rem;
+            background: linear-gradient(135deg, #14301c, #0d1f12);
+            border-bottom: 1px solid rgba(120, 180, 100, 0.25);
+        }
+        .card-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .card-title h3 {
+            font-size: 1.6rem;
+            font-weight: 600;
+            background: linear-gradient(120deg, #d9f0c4, #a8e06e);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+        .year {
+            background: #1e3a24;
+            padding: 4px 12px;
+            border-radius: 60px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: #c0e0a8;
+        }
+        .progress-area {
+            margin-top: 12px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.75rem;
+            color: #b0cf9a;
+        }
+        .progress-bar-bg {
+            background: #1e3a24;
+            border-radius: 40px;
+            height: 6px;
+            width: 100%;
+            margin-top: 6px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            background: #8bc34a;
+            width: 0%;
+            height: 100%;
+            border-radius: 40px;
+            transition: width 0.2s ease;
+        }
+        .admin-actions-col {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 8px;
+            gap: 8px;
+        }
+        .delete-collection {
+            background: none;
+            border: none;
+            color: #9ecc8a;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: 0.1s;
+            padding: 4px 8px;
+            border-radius: 30px;
+        }
+        .delete-collection:hover {
+            color: #ffa098;
+            background: #2f4a2a;
+        }
+        .add-figure-btn {
+            background: none;
+            border: 1px solid #8bc34a;
+            color: #b8e47c;
+            border-radius: 40px;
+            padding: 4px 12px;
+            font-size: 0.7rem;
+            cursor: pointer;
+            transition: 0.1s;
+        }
+        .add-figure-btn:hover {
+            background: #8bc34a20;
+        }
+
+        .figures-list {
+            padding: 0.8rem 1.2rem 1.2rem 1.2rem;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+        .figure-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 0.7rem 0.5rem;
+            border-bottom: 1px solid rgba(120, 180, 100, 0.2);
+            transition: background 0.1s;
+        }
+        .figure-item:hover {
+            background: rgba(100, 180, 100, 0.12);
+            border-radius: 20px;
+        }
+        .figure-img {
+            width: 48px;
+            height: 48px;
+            border-radius: 16px;
+            object-fit: cover;
+            background: #1e3a24;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: #b8e47c;
+            border: 1px solid #5a8f4c;
+            flex-shrink: 0;
+        }
+        .figure-img img {
+            width: 100%;
+            height: 100%;
+            border-radius: 14px;
+            object-fit: cover;
+        }
+        .figure-info {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .figure-name {
+            font-weight: 500;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .figure-name i {
+            color: #b8e47c;
+        }
+        .figure-actions {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+        /* Стили для статического индикатора */
+        .owned-indicator {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: #1e3a24;
+            padding: 4px 10px;
+            border-radius: 40px;
+            font-size: 0.7rem;
+            font-weight: 500;
+            color: #c0e0a8;
+        }
+        .owned-indicator i {
+            font-size: 0.8rem;
+        }
+        .check-label {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: #1e3a24;
+            padding: 4px 10px;
+            border-radius: 40px;
+            font-size: 0.7rem;
+            font-weight: 500;
+        }
+        .check-label input {
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+            accent-color: #8bc34a;
+        }
+        .icon-btn {
+            background: none;
+            border: none;
+            color: #b0cf9a;
+            cursor: pointer;
+            font-size: 1rem;
+            padding: 4px;
+            border-radius: 30px;
+            transition: 0.1s;
+        }
+        .icon-btn:hover {
+            background: #2f4a2a;
+            color: #d4f0c4;
+        }
+        .edit-figure-name {
+            font-size: 0.7rem;
+            background: none;
+            border: none;
+            color: #b0cf9a;
+            cursor: pointer;
+        }
+
+        .add-section {
+            background: #0d1f12;
+            border-radius: 40px;
+            padding: 1.8rem 2rem;
+            margin-top: 20px;
+            border: 1px solid #5a8f4c;
+            display: none;
+        }
+        .add-section.visible {
+            display: block;
+        }
+        .add-section h3 {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #c0e0a8;
+        }
+        .form-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+        .form-group input, .form-group textarea {
+            background: #1f3324;
+            border: 1px solid #5a8f4c;
+            padding: 12px 18px;
+            border-radius: 28px;
+            font-family: 'Inter', monospace;
+            font-size: 0.9rem;
+            color: #e0f0e0;
+            outline: none;
+            flex: 1;
+        }
+        .form-group input:focus, .form-group textarea:focus {
+            border-color: #8bc34a;
+            box-shadow: 0 0 0 2px rgba(139, 195, 74, 0.3);
+        }
+        .btn-add {
+            background: #8bc34a;
+            border: none;
+            padding: 12px 28px;
+            border-radius: 40px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: #0a1a0e;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            transition: 0.2s;
+        }
+        .btn-add:hover {
+            background: #a8e06e;
+            transform: scale(0.98);
+        }
+        footer {
+            margin-top: 3rem;
+            text-align: center;
+            font-size: 0.8rem;
+            color: #8aac7a;
+            border-top: 1px solid #2e5a2a;
+            padding-top: 1.5rem;
+        }
+        @media (max-width: 680px) {
+            body { padding: 1rem; }
+            .collections-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <div class="title-section">
+            <h1><i class="fas fa-crown"></i> Hirono</h1>
+            <div class="sub"><i class="fas fa-heart"></i> моя коллекция</div>
+        </div>
+        <div class="admin-panel">
+            <div class="stats" id="globalStats"><i class="fas fa-chart-simple"></i> загрузка...</div>
+            <button id="adminModeBtn" class="admin-btn"><i class="fas fa-lock"></i> Вход для владельца</button>
+        </div>
+    </div>
+
+    <div id="collectionsContainer" class="collections-grid"></div>
+
+    <div id="addSection" class="add-section">
+        <h3><i class="fas fa-plus-circle"></i> Добавить новую серию</h3>
+        <div class="form-group">
+            <input type="text" id="newCollectionName" placeholder="Название коллекции, например: Hirono · Ocean">
+            <input type="text" id="newCollectionYear" placeholder="Год выпуска">
+        </div>
+        <div class="form-group">
+            <textarea id="newFiguresList" rows="2" placeholder="Список фигурок через запятую&#10;Пример: Волна, Прибой, Риф, Буря, Берег"></textarea>
+        </div>
+        <div style="display: flex; justify-content: flex-end;">
+            <button class="btn-add" id="addCollectionBtn"><i class="fas fa-save"></i> Добавить коллекцию</button>
+        </div>
+        <div class="helper"><i class="fas fa-info-circle"></i> Фото можно добавить позже, кликнув на иконку камеры.</div>
+    </div>
+    <footer>
+        <i class="fas fa-star-of-life"></i> только милашка владелец может редактировать каталог, загружать фото и отмечать фигурки 💅 😈
+    </footer>
+</div>
+
+<script>
+    let isAdmin = false;
+    const ADMIN_PASSWORD = "hirono2026";
+
+    let collections = [];
+
+    function getDefaultCollections() {
+        return [
+            { id: "col_reshape", name: "Hirono · Reshape", year: "2022", figures: [
+                "Lurking","Fading","Drifting","Sinking","Floating","Awakening","Dreaming","Wandering","Solitary","The Shell (Secret)"
+            ].map(n => ({ name: n, owned: false, imageUrl: "" })) },
+            { id: "col_cityofmercy", name: "Hirono · City of Mercy", year: "2023", figures: [
+                "Guard","Victim","Sinner","Saint","Lost","Found","Forgiven","Forgotten","Mercy","Angel (Secret)"
+            ].map(n => ({ name: n, owned: false, imageUrl: "" })) },
+            { id: "col_imitation", name: "Hirono · Imitation", year: "2024", figures: [
+                "The Thinker","The Scream","The Kiss","The Creation","The Son of Man","Girl with Pearl","The Night Watch","Vitruvian Man","Birth of Venus","The Masterpiece (Secret)"
+            ].map(n => ({ name: n, owned: false, imageUrl: "" })) },
+            { id: "col_theotherone", name: "Hirono · The Other One", year: "2024", figures: [
+                "The Other One","The Double","The Shadow","The Mirror","The Reflection","The Echo","The Twin","The Copy","The Opposite","The Other Self (Secret)"
+            ].map(n => ({ name: n, owned: false, imageUrl: "" })) },
+            { id: "col_clot", name: "Hirono · CLOT", year: "2025", figures: [
+                "Silk","Cotton","Denim","Wool","Linen","Leather","Fur","Velvet","Synthetic","CLOT (Secret)"
+            ].map(n => ({ name: n, owned: false, imageUrl: "" })) },
+            { id: "col_mime", name: "Hirono · Mime", year: "2025", figures: [
+                "Mime","Jester","Clown","Harlequin","Pierrot","Columbina","Pulcinella","Scaramouche","Pantalone","Tragedy (Secret)"
+            ].map(n => ({ name: n, owned: false, imageUrl: "" })) },
+            { id: "col_shelter", name: "Hirono · Shelter", year: "2025", figures: [
+                "Shelter","Haven","Refuge","Asylum","Sanctuary","Harbor","Oasis","Retreat","Hideaway","Home (Secret)"
+            ].map(n => ({ name: n, owned: false, imageUrl: "" })) },
+            { id: "col_littleprince", name: "Hirono × The Little Prince", year: "2024", figures: [
+                "The Little Prince","The Rose","The Fox","The Snake","The Lamplighter","The Geographer","The Aviator (Secret)"
+            ].map(n => ({ name: n, owned: false, imageUrl: "" })) }
+        ];
+    }
+
+    function loadData() {
+        const stored = localStorage.getItem("hirono_collections_photo");
+        if (stored) {
+            try {
+                const parsed = JSON.parse(stored);
+                if (Array.isArray(parsed) && parsed.length) {
+                    collections = parsed;
+                    return;
+                }
+            } catch(e) {}
+        }
+        collections = getDefaultCollections();
+        saveData();
+    }
+
+    function saveData() {
+        localStorage.setItem("hirono_collections_photo", JSON.stringify(collections));
+    }
+
+    function updateFigureImage(collectionId, figureIndex, base64Image) {
+        const coll = collections.find(c => c.id === collectionId);
+        if (coll && coll.figures[figureIndex]) {
+            coll.figures[figureIndex].imageUrl = base64Image;
+            saveData();
+            renderAll();
+        }
+    }
+
+    function deleteFigure(collectionId, figureIndex) {
+        if (!isAdmin) return;
+        const coll = collections.find(c => c.id === collectionId);
+        if (coll && confirm(`Удалить фигурку "${coll.figures[figureIndex].name}"?`)) {
+            coll.figures.splice(figureIndex, 1);
+            saveData();
+            renderAll();
+        }
+    }
+
+    function addNewFigureToCollection(collectionId) {
+        if (!isAdmin) return;
+        const coll = collections.find(c => c.id === collectionId);
+        if (coll) {
+            let newName = prompt("Название новой фигурки:", "Новая фигурка");
+            if (newName && newName.trim()) {
+                coll.figures.push({ name: newName.trim(), owned: false, imageUrl: "" });
+                saveData();
+                renderAll();
+            }
+        }
+    }
+
+    function editFigureName(collectionId, figureIndex, currentName) {
+        if (!isAdmin) return;
+        const newName = prompt("Редактировать название фигурки:", currentName);
+        if (newName && newName.trim()) {
+            const coll = collections.find(c => c.id === collectionId);
+            if (coll && coll.figures[figureIndex]) {
+                coll.figures[figureIndex].name = newName.trim();
+                saveData();
+                renderAll();
+            }
+        }
+    }
+
+    function deleteCollectionById(collectionId) {
+        if (!isAdmin) return;
+        if (confirm("Удалить всю коллекцию? Все фигурки и фото будут удалены.")) {
+            collections = collections.filter(c => c.id !== collectionId);
+            saveData();
+            renderAll();
+        }
+    }
+
+    function addNewCollectionFromForm() {
+        if (!isAdmin) {
+            alert("только милашка владелец может добавлять коллекции 💅");
+            return;
+        }
+        const nameInput = document.getElementById("newCollectionName");
+        const yearInput = document.getElementById("newCollectionYear");
+        const figsText = document.getElementById("newFiguresList");
+        let name = nameInput.value.trim();
+        let year = yearInput.value.trim();
+        let rawFigures = figsText.value.trim();
+        if (!name) { alert("Название коллекции обязательно"); return; }
+        if (!year) year = new Date().getFullYear().toString();
+        let figureNames = rawFigures ? rawFigures.split(',').map(s=>s.trim()).filter(s=>s) : [];
+        if (figureNames.length === 0) { alert("Добавьте хотя бы одну фигурку через запятую"); return; }
+        const newFigures = figureNames.map(fname => ({ name: fname, owned: false, imageUrl: "" }));
+        const newId = "col_" + Date.now() + "_" + Math.floor(Math.random()*10000);
+        collections.push({ id: newId, name: name, year: year, figures: newFigures });
+        saveData();
+        nameInput.value = "";
+        yearInput.value = "";
+        figsText.value = "";
+        renderAll();
+    }
+
+    function toggleOwned(collectionId, figureIndex, isChecked) {
+        // Только админ может менять owned
+        if (!isAdmin) return;
+        const coll = collections.find(c => c.id === collectionId);
+        if (coll && coll.figures[figureIndex]) {
+            coll.figures[figureIndex].owned = isChecked;
+            saveData();
+            renderAll();
+        }
+    }
+
+    function getGlobalStats() {
+        let total=0, owned=0;
+        collections.forEach(c => c.figures.forEach(f => { total++; if(f.owned) owned++; }));
+        return { total, owned };
+    }
+
+    function renderAll() {
+        const container = document.getElementById("collectionsContainer");
+        const statsSpan = document.getElementById("globalStats");
+        const { total, owned } = getGlobalStats();
+        statsSpan.innerHTML = `<i class="fas fa-chart-simple"></i> собрано ${owned} / ${total} фигурок`;
+
+        if (!collections.length) {
+            container.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:3rem; background:#0f2416; border-radius:40px;">
+                <i class="fas fa-box-open" style="font-size:3rem; color:#b8e47c;"></i>
+                <p>Нет коллекций. Войдите как владелец, чтобы добавить.</p></div>`;
+            return;
+        }
+
+        container.innerHTML = collections.map(coll => {
+            const totalFigs = coll.figures.length;
+            const ownedCount = coll.figures.filter(f=>f.owned).length;
+            const percent = totalFigs===0?0:(ownedCount/totalFigs)*100;
+            const figuresHtml = coll.figures.map((fig, idx) => {
+                const imgHtml = fig.imageUrl && fig.imageUrl.startsWith('data:image') ?
+                    `<img src="${fig.imageUrl}" alt="${escapeHtml(fig.name)}">` :
+                    `<i class="fas fa-image" style="font-size: 1.8rem;"></i>`;
+                // В зависимости от isAdmin показываем либо активный чекбокс, либо статический индикатор
+                const ownedControl = isAdmin ? `
+                    <label class="check-label">
+                        <input type="checkbox" ${fig.owned ? 'checked' : ''} data-owned-check data-col="${coll.id}" data-fig="${idx}">
+                        <span>в коллекции</span>
+                    </label>
+                ` : `
+                    <div class="owned-indicator">
+                        ${fig.owned ? '<i class="fas fa-check-circle" style="color:#8bc34a;"></i>' : '<i class="far fa-circle" style="color:#6a8e5a;"></i>'}
+                        <span>${fig.owned ? 'в коллекции' : 'не в коллекции'}</span>
+                    </div>
+                `;
+                return `
+                    <div class="figure-item" data-col-id="${coll.id}" data-fig-idx="${idx}">
+                        <div class="figure-img">
+                            ${imgHtml}
+                        </div>
+                        <div class="figure-info">
+                            <div class="figure-name">
+                                <i class="fas fa-dragon"></i>
+                                <span id="fig-name-${coll.id}-${idx}">${escapeHtml(fig.name)}</span>
+                                ${isAdmin ? `<button class="edit-figure-name icon-btn" data-edit-figure="${coll.id}|${idx}" title="Изменить название"><i class="fas fa-pencil-alt"></i></button>` : ''}
+                            </div>
+                            <div class="figure-actions">
+                                ${ownedControl}
+                                ${isAdmin ? `
+                                    <button class="icon-btn" data-upload-img="${coll.id}|${idx}" title="Загрузить фото"><i class="fas fa-camera"></i></button>
+                                    <button class="icon-btn" data-del-figure="${coll.id}|${idx}" title="Удалить фигурку"><i class="fas fa-trash-alt"></i></button>
+                                ` : ''}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            return `
+                <div class="collection-card" data-collection-id="${coll.id}">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <h3>${escapeHtml(coll.name)}</h3>
+                            <div class="year"><i class="far fa-calendar-alt"></i> ${escapeHtml(coll.year)}</div>
+                        </div>
+                        <div class="progress-area">
+                            <span><i class="fas fa-cube"></i> ${ownedCount}/${totalFigs}</span>
+                            <span>${Math.round(percent)}%</span>
+                        </div>
+                        <div class="progress-bar-bg"><div class="progress-fill" style="width:${percent}%;"></div></div>
+                        <div class="admin-actions-col">
+                            ${isAdmin ? `<button class="add-figure-btn" data-add-figure="${coll.id}" title="Добавить фигурку"><i class="fas fa-plus"></i> Добавить фигурку</button>` : ''}
+                            ${isAdmin ? `<button class="delete-collection" data-del-col="${coll.id}" title="Удалить коллекцию"><i class="fas fa-trash-alt"></i></button>` : ''}
+                        </div>
+                    </div>
+                    <div class="figures-list">${figuresHtml}</div>
+                </div>
+            `;
+        }).join('');
+
+        attachEvents();
+    }
+
+    function attachEvents() {
+        // Чекбоксы только для админа (они есть только если isAdmin)
+        document.querySelectorAll('input[data-owned-check]').forEach(cb => {
+            cb.removeEventListener('change', ownedHandler);
+            cb.addEventListener('change', ownedHandler);
+        });
+        document.querySelectorAll('[data-upload-img]').forEach(btn => {
+            btn.removeEventListener('click', uploadHandler);
+            btn.addEventListener('click', uploadHandler);
+        });
+        document.querySelectorAll('[data-del-figure]').forEach(btn => {
+            btn.removeEventListener('click', deleteFigureHandler);
+            btn.addEventListener('click', deleteFigureHandler);
+        });
+        document.querySelectorAll('[data-add-figure]').forEach(btn => {
+            btn.removeEventListener('click', addFigureHandler);
+            btn.addEventListener('click', addFigureHandler);
+        });
+        document.querySelectorAll('[data-del-col]').forEach(btn => {
+            btn.removeEventListener('click', deleteColHandler);
+            btn.addEventListener('click', deleteColHandler);
+        });
+        document.querySelectorAll('[data-edit-figure]').forEach(btn => {
+            btn.removeEventListener('click', editFigureHandler);
+            btn.addEventListener('click', editFigureHandler);
+        });
+    }
+
+    function ownedHandler(e) {
+        e.stopPropagation();
+        if (!isAdmin) return; // дополнительная страховка
+        const cb = e.target;
+        const colId = cb.getAttribute('data-col');
+        const figIdx = parseInt(cb.getAttribute('data-fig'), 10);
+        if (colId && !isNaN(figIdx)) toggleOwned(colId, figIdx, cb.checked);
+    }
+
+    function uploadHandler(e) {
+        if (!isAdmin) return;
+        const target = e.currentTarget;
+        const ids = target.getAttribute('data-upload-img').split('|');
+        const colId = ids[0];
+        const figIdx = parseInt(ids[1], 10);
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = 'image/*';
+        input.onchange = (event) => {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (loadEv) => {
+                    updateFigureImage(colId, figIdx, loadEv.target.result);
+                };
+                reader.readAsDataURL(file);
+            }
+        };
+        input.click();
+    }
+
+    function deleteFigureHandler(e) {
+        if (!isAdmin) return;
+        const target = e.currentTarget;
+        const ids = target.getAttribute('data-del-figure').split('|');
+        deleteFigure(ids[0], parseInt(ids[1],10));
+    }
+
+    function addFigureHandler(e) {
+        if (!isAdmin) return;
+        const colId = e.currentTarget.getAttribute('data-add-figure');
+        addNewFigureToCollection(colId);
+    }
+
+    function deleteColHandler(e) {
+        if (!isAdmin) return;
+        const colId = e.currentTarget.getAttribute('data-del-col');
+        deleteCollectionById(colId);
+    }
+
+    function editFigureHandler(e) {
+        if (!isAdmin) return;
+        const target = e.currentTarget;
+        const ids = target.getAttribute('data-edit-figure').split('|');
+        const colId = ids[0];
+        const figIdx = parseInt(ids[1],10);
+        const coll = collections.find(c=>c.id===colId);
+        if(coll && coll.figures[figIdx]) {
+            editFigureName(colId, figIdx, coll.figures[figIdx].name);
+        }
+    }
+
+    function enableAdminMode() {
+        const pwd = prompt("🔐 Введите пароль милашки-владельца:");
+        if (pwd === ADMIN_PASSWORD) {
+            isAdmin = true;
+            document.getElementById("adminModeBtn").innerHTML = '<i class="fas fa-user-astronaut"></i> Милашка-редактор';
+            document.getElementById("adminModeBtn").classList.add("active");
+            document.getElementById("addSection").classList.add("visible");
+            renderAll();
+        } else if (pwd !== null) {
+            alert("❌ Неверный пароль. Только милашка владелец может редактировать 💅");
+        }
+    }
+
+    function logoutAdmin() {
+        isAdmin = false;
+        document.getElementById("adminModeBtn").innerHTML = '<i class="fas fa-lock"></i> Вход для владельца';
+        document.getElementById("adminModeBtn").classList.remove("active");
+        document.getElementById("addSection").classList.remove("visible");
+        renderAll();
+    }
+
+    function toggleAdminMode() {
+        if (isAdmin) {
+            if (confirm("Выйти из режима милашки?")) logoutAdmin();
+        } else {
+            enableAdminMode();
+        }
+    }
+
+    function init() {
+        loadData();
+        renderAll();
+        const adminBtn = document.getElementById("adminModeBtn");
+        adminBtn.addEventListener("click", toggleAdminMode);
+        const addBtn = document.getElementById("addCollectionBtn");
+        addBtn.addEventListener("click", () => addNewCollectionFromForm());
+        document.getElementById("addSection").classList.remove("visible");
+        isAdmin = false;
+    }
+
+    function escapeHtml(str) {
+        if(!str) return '';
+        return str.replace(/[&<>]/g, function(m) {
+            if(m==='&') return '&amp;';
+            if(m==='<') return '&lt;';
+            if(m==='>') return '&gt;';
+            return m;
+        });
+    }
+
+    init();
+</script>
+</body>
+</html>
